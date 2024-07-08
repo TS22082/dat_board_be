@@ -1,3 +1,5 @@
+// Package main provides the server implementation for the dat board application.
+// It includes setting up the server, loading environment variables, and defining routes and middleware.
 package main
 
 import (
@@ -10,16 +12,20 @@ import (
 	"github.com/ts22082/dat_board_be/middleware"
 )
 
+// main is the entry point for the server application.
+// It loads environment variables, sets up the Fiber app with necessary middleware, and defines API routes.
 func main() {
 
+	// Load environment variables from .env file
 	err := godotenv.Load()
-
 	if err != nil {
 		log.Printf("Failed to load .env: %v: ", err)
 	}
 
+	// Create a new Fiber app
 	app := fiber.New()
 
+	// Configure CORS middleware
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
 		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
@@ -27,14 +33,19 @@ func main() {
 		AllowCredentials: false,
 	}))
 
+	// Use MongoConnect middleware for database connection
 	app.Use(middleware.MongoConnect())
 
+	// Set up API routes
 	api := app.Group("/api")
 
+	// GitHub login route with logging middleware
 	api.Get("/github/gh_login", middleware.Logging, handlers.GhLogin)
 
+	// User route with authentication and logging middleware
 	api.Get("/user", middleware.Logging, middleware.VerifyAuth, handlers.GetAuthedUser)
 
+	// Start the server on port 8080
 	const PORT = ":8080"
 	log.Printf("Listening on port %v", PORT)
 	app.Listen(PORT)

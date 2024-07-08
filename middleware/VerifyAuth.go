@@ -1,3 +1,5 @@
+// Package middleware provides various middleware functions for the dat board application,
+// including authentication middleware to verify JWT tokens.
 package middleware
 
 import (
@@ -8,6 +10,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// VerifyAuth is a middleware function that verifies the JWT token from the Authorization header.
+// It checks the token's validity, expiration, and extracts the user ID from the token claims.
+// If the token is valid, the user ID is stored in the request context for subsequent handlers to use.
+// If the token is invalid or expired, it returns a 401 Unauthorized status with an appropriate error message.
 func VerifyAuth(c *fiber.Ctx) error {
 	authToken := c.Get("Authorization")
 
@@ -17,9 +23,7 @@ func VerifyAuth(c *fiber.Ctx) error {
 		})
 	}
 
-	// Parse the token
 	parsedToken, err := jwt.Parse(authToken, func(token *jwt.Token) (interface{}, error) {
-		// Make sure that the token's algorithm matches the expected algorithm
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fiber.NewError(fiber.StatusUnauthorized, "unexpected signing method")
 		}

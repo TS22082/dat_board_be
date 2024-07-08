@@ -1,3 +1,5 @@
+// Package middleware provides various middleware functions for the dat board application,
+// including logging middleware to log HTTP requests and responses.
 package middleware
 
 import (
@@ -9,6 +11,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// Logging is a middleware function for logging HTTP requests and responses.
+// It logs the request method, URL, IP address, query parameters, response status, and duration of the request.
+// The log entries are color-coded for better readability.
 func Logging(c *fiber.Ctx) error {
 	// Define color functions
 	methodColor := color.New(color.FgCyan).SprintFunc()
