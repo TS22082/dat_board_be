@@ -109,14 +109,9 @@ func GhLogin(c *fiber.Ctx) error {
 		}
 	}
 
-	mongoClient := c.Locals("mongoClient").(*mongo.Client)
-	if mongoClient == nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(map[string]interface{}{
-			"error": "Could not get MongoDB client from locals",
-		})
-	}
+	mongoDB := c.Locals("mongoDB").(*mongo.Database)
 
-	userCollection := mongoClient.Database("dat_board").Collection("Users")
+	userCollection := mongoDB.Collection("Users")
 	userFound := userCollection.FindOne(context.Background(), bson.D{{Key: "email", Value: primaryEmail}})
 
 	type UserModel struct {

@@ -4,47 +4,44 @@ import (
 	"context"
 
 	"github.com/gofiber/fiber/v2"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Item struct {
-	Id        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	CreatorId string             `json:"creatorId" bson:"creatorId"`
-	Title     string             `json:"title" bson:"title"`
-	IsPublic  bool               `json:"isPublic" bson:"isPublic"`
-	ParentId  string             `json:"parentId" bson:"parentId"`
+	CreatorId string `json:"creatorId" bson:"creatorId"`
+	Title     string `json:"title" bson:"title"`
+	IsPublic  bool   `json:"isPublic" bson:"isPublic"`
+	ParentId  string `json:"parentId" bson:"parentId"`
+}
+
+var failedToCreateMessage = map[string]interface{}{
+	"message": "failed to create a new item",
 }
 
 func CreateItem(c *fiber.Ctx) error {
-	mongoClient := c.Locals("mongoClient").(*mongo.Client)
+	mongoDB := c.Locals("mongoDB").(*mongo.Database)
 
-	if mongoClient == nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(map[string]interface{}{
-			"message": "mongo client is nil",
-		})
+	if mongoDB == nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(failedToCreateMessage)
 	}
 
-	var itemCollection = mongoClient.Database("dat_board").Collection("Items")
+	var itemCollection = mongoDB.Collection("Items")
 
 	var item Item
 	item.CreatorId = c.Locals("userId").(string)
 
 	err := c.BodyParser(&item)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
-			"message": "failed",
-		})
+		return c.Status(fiber.StatusInternalServerError).JSON(failedToCreateMessage)
 	}
 
-	_, err = itemCollection.InsertOne(context.Background(), item)
+	newItem, err := itemCollection.InsertOne(context.Background(), item)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(map[string]interface{}{
-			"message": "failed to create a new item"})
+		return c.Status(fiber.StatusInternalServerError).JSON(failedToCreateMessage)
 	}
 
 	return c.JSON(map[string]interface{}{
-		"message": "created",
+		"message": newItem,
 	})
 }

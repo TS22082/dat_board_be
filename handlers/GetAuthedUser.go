@@ -18,7 +18,7 @@ type User struct {
 func GetAuthedUser(c *fiber.Ctx) error {
 
 	userId := c.Locals("userId").(string)
-	mongoClient := c.Locals("mongoClient").(*mongo.Client)
+	mongoDB := c.Locals("mongoDB").(*mongo.Database)
 
 	objID, err := primitive.ObjectIDFromHex(userId)
 
@@ -27,7 +27,7 @@ func GetAuthedUser(c *fiber.Ctx) error {
 	}
 
 	var user User
-	userCollection := mongoClient.Database("dat_board").Collection("Users")
+	userCollection := mongoDB.Collection("Users")
 	err = userCollection.FindOne(context.Background(), bson.D{{Key: "_id", Value: objID}}).Decode(&user)
 
 	if err != nil {

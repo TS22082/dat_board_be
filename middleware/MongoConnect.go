@@ -43,7 +43,7 @@ func MongoConnect() fiber.Handler {
 
 	// Middleware function to store the MongoDB client in the request context
 	return func(c *fiber.Ctx) error {
-		c.Locals("mongoClient", client)
+		c.Locals("mongoDB", client.Database("dat_board"))
 		return c.Next()
 	}
 }
