@@ -120,8 +120,8 @@ func GhLogin(c *fiber.Ctx) error {
 	userFound := userCollection.FindOne(context.Background(), bson.D{{Key: "email", Value: primaryEmail}})
 
 	type UserModel struct {
-		Email string `bson:"email"`
-		ID    string `bson:"_id"`
+		Email string `json:"email" bson:"email"`
+		ID    string `json:"_id" bson:"_id"`
 	}
 
 	var user UserModel

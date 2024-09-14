@@ -47,6 +47,9 @@ func main() {
 
 	api.Get("/delay/:delay", middleware.Logging, middleware.Delay, handlers.TestDelay)
 
+	// Creates an Item route with authentication and logging middleware
+	api.Post("/item", middleware.Logging, middleware.VerifyAuth, handlers.CreateItem)
+
 	// Start the server on port 8080
 	const PORT = ":8080"
 	log.Printf("Listening on port %v", PORT)
