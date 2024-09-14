@@ -45,6 +45,8 @@ func main() {
 	// User route with authentication and logging middleware
 	api.Get("/user", middleware.Logging, middleware.VerifyAuth, handlers.GetAuthedUser)
 
+	api.Get("/delay/:delay", middleware.Logging, middleware.Delay, handlers.TestDelay)
+
 	// Start the server on port 8080
 	const PORT = ":8080"
 	log.Printf("Listening on port %v", PORT)
