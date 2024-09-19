@@ -15,6 +15,7 @@ type User struct {
 	Email string             `bson:"email,omitempty"`
 }
 
+// GetAuthedUser gets the authenticated user from the database
 func GetAuthedUser(c *fiber.Ctx) error {
 
 	userId := c.Locals("userId").(string)

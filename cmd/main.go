@@ -45,6 +45,7 @@ func main() {
 	// User route with authentication and logging middleware
 	api.Get("/user", middleware.Logging, middleware.VerifyAuth, handlers.GetAuthedUser)
 
+	// A test route with logging and delay middleware
 	api.Get("/delay/:delay", middleware.Logging, middleware.Delay, handlers.TestDelay)
 
 	// Creates an Item route with authentication and logging middleware
