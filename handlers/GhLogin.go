@@ -18,6 +18,13 @@ var errorResponse = map[string]interface{}{
 	"message": "failed",
 }
 
+// GhLogin is a handler function that handles GitHub OAuth login requests.
+// It takes a `code` parameter from the query string, retrieves the access token using the GitHub API, and returns a
+// JSON response with the user's GitHub profile information.
+//
+// Parameters: `code` (string)
+//
+// Returns: JSON response with user's GitHub profile information
 func GhLogin(c *fiber.Ctx) error {
 	code := c.Query("code")
 

@@ -16,6 +16,12 @@ type User struct {
 }
 
 // GetAuthedUser gets the authenticated user from the database
+// and returns it as a JSON response
+// Parameters:
+// - c: The Fiber context, used to retrieve the MongoDB database and request information.
+//
+// Returns:
+// - An error if the item creation fails, or a JSON response with the created item.
 func GetAuthedUser(c *fiber.Ctx) error {
 
 	userId := c.Locals("userId").(string)
