@@ -39,11 +39,11 @@ func CreateItem(c *fiber.Ctx) error {
 
 	res, err := itemCollection.InsertOne(context.Background(), item)
 
-	item.Id = res.InsertedID.(primitive.ObjectID).Hex()
-
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(failedToCreateMessage)
 	}
+
+	item.Id = res.InsertedID.(primitive.ObjectID).Hex()
 
 	return c.JSON(map[string]interface{}{
 		"message": item,
