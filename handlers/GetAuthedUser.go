@@ -5,15 +5,11 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/ts22082/dat_board_be/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
-
-type User struct {
-	ID    primitive.ObjectID `bson:"_id,omitempty"`
-	Email string             `bson:"email,omitempty"`
-}
 
 // GetAuthedUser gets the authenticated user from the database
 // and returns it as a JSON response
@@ -33,7 +29,7 @@ func GetAuthedUser(c *fiber.Ctx) error {
 		log.Fatal(err)
 	}
 
-	var user User
+	var user models.User
 	userCollection := mongoDB.Collection("Users")
 	err = userCollection.FindOne(context.Background(), bson.D{{Key: "_id", Value: objID}}).Decode(&user)
 

@@ -26,6 +26,7 @@ func main() {
 	app := fiber.New()
 
 	// Configure CORS middleware
+	// After deploying will restrict to deployed address
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
 		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
@@ -50,6 +51,9 @@ func main() {
 
 	// Creates an Item route with authentication and logging middleware
 	api.Post("/item", middleware.Logging, middleware.VerifyAuth, handlers.CreateItem)
+
+	// Get Items route with authentication and logging middleware
+	api.Get("/items", middleware.Logging, middleware.VerifyAuth, handlers.GetItems)
 
 	// Start the server on port 8080
 	const PORT = ":8080"

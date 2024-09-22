@@ -4,18 +4,12 @@ import (
 	"context"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/ts22082/dat_board_be/models"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // Item represents an item structure with fields corresponding to the JSON and BSON object structure.
-type Item struct {
-	CreatorId string `json:"creatorId" bson:"creatorId"`
-	Id        string `json:"id" bson:"_id,omitempty"`
-	Title     string `json:"title" bson:"title"`
-	IsPublic  bool   `json:"isPublic" bson:"isPublic"`
-	ParentId  string `json:"parentId" bson:"parentId"`
-}
 
 var failedToCreateMessage = map[string]interface{}{
 	"message": "failed to create a new item",
@@ -40,7 +34,7 @@ func CreateItem(c *fiber.Ctx) error {
 
 	var itemCollection = mongoDB.Collection("Items")
 
-	var item Item
+	var item models.Item
 	item.CreatorId = c.Locals("userId").(string)
 
 	err := c.BodyParser(&item)
