@@ -52,6 +52,8 @@ func main() {
 	// Creates an Item route with authentication and logging middleware
 	api.Post("/item", middleware.Logging, middleware.VerifyAuth, handlers.CreateItem)
 
+	api.Delete("/item/:id", middleware.Logging, middleware.VerifyAuth, handlers.DeleteItem)
+
 	// Get Items route with authentication and logging middleware
 	api.Get("/items", middleware.Logging, middleware.VerifyAuth, handlers.GetItems)
 
