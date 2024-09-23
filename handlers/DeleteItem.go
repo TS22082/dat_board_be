@@ -2,9 +2,11 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -27,14 +29,25 @@ func DeleteItem(c *fiber.Ctx) error {
 	userId := c.Locals("userId").(string)
 	itemId := c.Params("id")
 
+	fmt.Println("userId", userId)
+	fmt.Println("itemId", itemId)
+
 	if mongoDB == nil {
 		c.Status(fiber.StatusInternalServerError).JSON(failedToDeleteMessage)
 	}
 
-	itemCollection := mongoDB.Collection("Items")
-	filter := bson.M{"_id": itemId, "creatorId": userId}
+	var itemIdHex, err = primitive.ObjectIDFromHex(itemId)
 
-	_, err := itemCollection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError).JSON(failedToDeleteMessage)
+	}
+
+	itemCollection := mongoDB.Collection("Items")
+	filter := bson.M{"_id": itemIdHex}
+
+	fmt.Println("filter", filter)
+
+	_, err = itemCollection.DeleteOne(context.Background(), filter)
 
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError).JSON(failedToDeleteMessage)
