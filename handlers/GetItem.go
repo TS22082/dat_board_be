@@ -37,7 +37,10 @@ func GetItem(c *fiber.Ctx) error {
 		c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
 	}
 
-	err = itemCollection.FindOne(context.Background(), bson.D{{Key: "_id", Value: itemAsHex}}).Decode(&item)
+	filter := bson.M{
+		"_id": itemAsHex}
+
+	err = itemCollection.FindOne(context.Background(), filter).Decode(&item)
 
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
