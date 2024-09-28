@@ -65,4 +65,12 @@ func main() {
 	const PORT = ":8080"
 	log.Printf("Listening on port %v", PORT)
 	app.Listen(PORT)
+
+	// Gracefully shutdown the server
+	err = app.Shutdown()
+
+	// Log any errors if graceful exit is unsuccessful
+	if err != nil {
+		log.Fatal(err)
+	}
 }
