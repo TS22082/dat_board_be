@@ -46,8 +46,6 @@ func GetAuthedUser(c *fiber.Ctx) error {
 		})
 	}
 
-	log.Printf("user: %v", user)
-
 	return c.JSON(map[string]interface{}{
 		"user": user,
 	})

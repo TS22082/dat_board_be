@@ -33,11 +33,7 @@ func GetItems(c *fiber.Ctx) error {
 	var items []models.Item
 
 	itemCollection := mongoDB.Collection("Items")
-	filter := bson.M{"creatorId": userId}
-
-	if parentId != "" {
-		filter = bson.M{"creatorId": userId, "parentId": parentId}
-	}
+	filter := bson.M{"creatorId": userId, "parentId": parentId}
 
 	cursor, err := itemCollection.Find(context.Background(), filter)
 
