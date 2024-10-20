@@ -55,7 +55,8 @@ func GhLogin(c *fiber.Ctx) error {
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
-			"error": "issue making request",
+			"message": "issue making request",
+			"error":   err.Error(),
 		})
 	}
 
