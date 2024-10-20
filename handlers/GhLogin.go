@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"io"
 	"net/http"
 	"os"
@@ -125,8 +126,8 @@ func GhLogin(c *fiber.Ctx) error {
 	userFound := userCollection.FindOne(context.Background(), bson.D{{Key: "email", Value: primaryEmail}})
 
 	type UserModel struct {
-		Email string `json:"email" bson:"email"`
-		ID    string `json:"_id" bson:"_id"`
+		Email string             `json:"email" bson:"email"`
+		ID    primitive.ObjectID `json:"_id" bson:"_id,omitempty"`
 	}
 
 	var user UserModel
@@ -142,7 +143,7 @@ func GhLogin(c *fiber.Ctx) error {
 				})
 			}
 
-			newUser.ID = insertResult.InsertedID.(string)
+			newUser.ID = insertResult.InsertedID.(primitive.ObjectID)
 			// Generate JWT token for the new user
 			token, err := utils.GenerateJWT(newUser.ID)
 			if err != nil {
