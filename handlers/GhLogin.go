@@ -53,6 +53,8 @@ func GhLogin(c *fiber.Ctx) error {
 
 	ghAuthResults, _, err := utils.MakeHTTPRequest(ghAuthParams)
 
+	fmt.Println("err", err)
+
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(map[string]interface{}{
 			"message": "issue making request",
