@@ -63,7 +63,7 @@ func main() {
 	api.Get("/items", middleware.Logging, middleware.VerifyAuth, handlers.GetItems)
 
 	// Start the server on port 8080
-	const PORT = ":8080"
+	const PORT = "0.0.0.0:8080"
 	log.Printf("Listening on port %v", PORT)
 
 	if err := app.Listen(PORT); err != nil {
