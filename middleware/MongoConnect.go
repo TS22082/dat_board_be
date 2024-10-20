@@ -4,6 +4,7 @@ package middleware
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"os"
 	"time"
@@ -26,7 +27,9 @@ func MongoConnect() fiber.Handler {
 
 	// Retrieve MongoDB URI from environment variables
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	clientOptions := options.Client().ApplyURI(os.Getenv("MONGO_URI")).SetServerAPIOptions(serverAPI)
+	clientOptions := options.Client().ApplyURI(os.Getenv("MONGO_URI")).SetServerAPIOptions(serverAPI).SetTLSConfig(&tls.Config{
+		InsecureSkipVerify: true,
+	})
 
 	// Connect to MongoDB
 	client, err := mongo.Connect(ctx, clientOptions)
