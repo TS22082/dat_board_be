@@ -13,6 +13,13 @@ RUN go build -v -o /run-app ./cmd
 
 FROM debian:bookworm
 
+# Install CA certificates to ensure TLS connections can be verified
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
 # Copy the built binary from the builder stage
 COPY --from=builder /run-app /usr/local/bin/
+
+# Set the binary as the entrypoint
 CMD ["run-app"]
