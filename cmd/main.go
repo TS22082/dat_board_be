@@ -64,7 +64,10 @@ func main() {
 	// Start the server on port 8080
 	const PORT = ":8080"
 	log.Printf("Listening on port %v", PORT)
-	app.Listen(PORT)
+
+	if err := app.Listen(PORT); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 
 	// Gracefully shutdown the server
 	err = app.Shutdown()

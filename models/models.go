@@ -8,6 +8,8 @@ type Item struct {
 	Title     string `json:"title" bson:"title"`
 	IsPublic  bool   `json:"isPublic" bson:"isPublic"`
 	ParentId  string `json:"parentId" bson:"parentId"`
+	CreatedAt string `json:"createdAt" bson:"createdAt"`
+	UpdatedAt string `json:"updatedAt" bson:"updatedAt"`
 }
 
 type User struct {

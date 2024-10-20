@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ts22082/dat_board_be/models"
@@ -35,7 +36,12 @@ func CreateItem(c *fiber.Ctx) error {
 	var itemCollection = mongoDB.Collection("Items")
 
 	var item models.Item
+
 	item.CreatorId = c.Locals("userId").(string)
+	currentTime := time.Now().UTC().Format(time.RFC3339)
+
+	item.CreatedAt = currentTime
+	item.UpdatedAt = currentTime
 
 	err := c.BodyParser(&item)
 	if err != nil {
