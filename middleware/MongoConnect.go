@@ -22,6 +22,8 @@ func MongoConnect() fiber.Handler {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	fmt.Println("URI for mongodb ==>", os.Getenv("MONGO_URI"))
+
 	// Retrieve MongoDB URI from environment variables
 	clientOptions := options.Client().ApplyURI(os.Getenv("MONGO_URI"))
 
