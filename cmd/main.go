@@ -4,6 +4,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -28,10 +29,10 @@ func main() {
 	// Configure CORS middleware
 	// After deploying will restrict to deployed address
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "*",
+		AllowOrigins:     os.Getenv("ORIGIN"),
 		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
-		AllowHeaders:     "Origin, Content-Type, Accept",
-		AllowCredentials: false,
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowCredentials: true,
 	}))
 
 	// Use MongoConnect middleware for database connection
