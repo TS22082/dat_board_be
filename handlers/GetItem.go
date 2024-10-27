@@ -25,7 +25,7 @@ func GetItem(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	if mongoDB == nil {
-		c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
+		return c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
 	}
 
 	var itemCollection = mongoDB.Collection("Items")
@@ -34,7 +34,7 @@ func GetItem(c *fiber.Ctx) error {
 	itemAsHex, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {
-		c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
+		return c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
 	}
 
 	filter := bson.M{"_id": itemAsHex}
@@ -42,7 +42,7 @@ func GetItem(c *fiber.Ctx) error {
 	err = itemCollection.FindOne(context.Background(), filter).Decode(&item)
 
 	if err != nil {
-		c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
+		return c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
 	}
 
 	return c.Status(fiber.StatusOK).JSON(item)
