@@ -27,7 +27,7 @@ func GetItems(c *fiber.Ctx) error {
 	parentId := c.Query("parentId")
 
 	if mongoDB == nil {
-		c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
+		return c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
 	}
 
 	var items []models.Item
@@ -38,11 +38,11 @@ func GetItems(c *fiber.Ctx) error {
 	cursor, err := itemCollection.Find(context.Background(), filter)
 
 	if err != nil {
-		c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
+		return c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
 	}
 
 	if err = cursor.All(context.Background(), &items); err != nil {
-		c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
+		return c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
 	}
 
 	return c.JSON(items)

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -33,16 +34,15 @@ func GetAuthedUser(c *fiber.Ctx) error {
 	userCollection := mongoDB.Collection("Users")
 	err = userCollection.FindOne(context.Background(), bson.D{{Key: "_id", Value: objID}}).Decode(&user)
 
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return c.JSON(map[string]interface{}{
-				"message": "There is no documents that match",
-			})
-		} else {
-			log.Fatal(err)
-		}
+	if errors.Is(err, mongo.ErrNoDocuments) {
 		return c.JSON(map[string]interface{}{
-			"message": "There was a problem finding this document",
+			"message": "There is no document that matches",
+		})
+	}
+
+	if err != nil {
+		return c.JSON(fiber.Map{
+			"message": "Issue looking up document",
 		})
 	}
 

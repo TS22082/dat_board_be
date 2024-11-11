@@ -133,6 +133,7 @@ func GhLogin(c *fiber.Ctx) error {
 	var user UserModel
 	err = userFound.Decode(&user)
 	if err != nil {
+		// TODO: Need to refactor out the nested if if. Solve the way GetAuthedUser did.
 		if err == mongo.ErrNoDocuments {
 			// No user found, create a new user
 			newUser := UserModel{Email: primaryEmail}
