@@ -34,16 +34,23 @@ func CreateItem(c *fiber.Ctx) error {
 	}
 
 	var itemCollection = mongoDB.Collection("Items")
-
 	var item models.Item
+	var stringFromLocals = c.Locals("userId").(string)
 
-	item.CreatorId = c.Locals("userId").(string)
+	var creatorId, err = primitive.ObjectIDFromHex(stringFromLocals)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(failedToCreateMessage)
+	}
+
+	item.CreatorId = creatorId
+
 	currentTime := time.Now().UTC().Format(time.RFC3339)
 
 	item.CreatedAt = currentTime
 	item.UpdatedAt = currentTime
 
-	err := c.BodyParser(&item)
+	err = c.BodyParser(&item)
+
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(failedToCreateMessage)
 	}
@@ -54,7 +61,7 @@ func CreateItem(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(failedToCreateMessage)
 	}
 
-	item.Id = res.InsertedID.(primitive.ObjectID).Hex()
+	item.Id = res.InsertedID.(primitive.ObjectID)
 
 	return c.JSON(map[string]interface{}{
 		"message": item,

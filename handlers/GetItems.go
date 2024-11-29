@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/ts22082/dat_board_be/models"
@@ -23,8 +24,8 @@ var failedToGetMessage = map[string]interface{}{
 // - An error if the item retrieval fails, or a JSON response with the retrieved items.
 func GetItems(c *fiber.Ctx) error {
 	mongoDB := c.Locals("mongoDB").(*mongo.Database)
-	userId := c.Locals("userId").(string)
-	parentId := c.Query("parentId")
+	userIdStr := c.Locals("userId").(string)
+	parentIdStr := c.Query("parentId")
 
 	if mongoDB == nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
@@ -33,7 +34,21 @@ func GetItems(c *fiber.Ctx) error {
 	var items []models.Item
 
 	itemCollection := mongoDB.Collection("Items")
-	filter := bson.M{"creatorId": userId, "parentId": parentId}
+	uidAsHex, err := primitive.ObjectIDFromHex(userIdStr)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
+	}
+
+	filter := bson.M{"creatorId": uidAsHex, "parentId": nil}
+
+	if parentIdStr != "" {
+		parentIdAsHex, err := primitive.ObjectIDFromHex(parentIdStr)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(failedToGetMessage)
+		}
+		filter = bson.M{"creatorId": uidAsHex, "parentId": parentIdAsHex}
+	}
 
 	cursor, err := itemCollection.Find(context.Background(), filter)
 
