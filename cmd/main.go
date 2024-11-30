@@ -62,6 +62,9 @@ func main() {
 	// Get Items route with authentication and logging middleware
 	api.Get("/items", middleware.Logging, middleware.VerifyAuth, handlers.GetItems)
 
+	// Gets all widgets with authentication and logging middleware
+	api.Get("/widgets", middleware.Logging, middleware.VerifyAuth, handlers.GetAllWidgets)
+
 	// Start the server on port 8080
 	const PORT = "0.0.0.0:8080"
 	log.Printf("Listening on port %v", PORT)

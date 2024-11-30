@@ -16,3 +16,9 @@ type User struct {
 	ID    primitive.ObjectID `bson:"_id,omitempty"`
 	Email string             `bson:"email,omitempty"`
 }
+
+type Widget struct {
+	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Description string             `json:"description" bson:"description"`
+	Title       string             `json:"title" bson:"title"`
+}
