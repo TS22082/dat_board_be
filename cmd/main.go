@@ -28,14 +28,22 @@ func main() {
 	// After deploying will restrict to deployed address
 	app.Use(cors.New(cors.Config{
 		//AllowOrigins:     os.Getenv("ORIGIN"),
-		AllowOrigins:     "*",
-		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
-		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
-		AllowCredentials: true,
+		AllowOrigins: "*",
+		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH",
+		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
+		//AllowCredentials: true,
 	}))
 
 	// Use MongoConnect middleware for database connection
 	app.Use(middleware.MongoConnect())
+
+	app.Get("/test", func(c *fiber.Ctx) error {
+		response := map[string]interface{}{
+			"msg": "Success",
+		}
+
+		return c.JSON(response)
+	})
 
 	// Set up API routes
 	api := app.Group("/api")
