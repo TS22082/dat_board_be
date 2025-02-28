@@ -3,14 +3,12 @@
 package main
 
 import (
-	"log"
-	"os"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 	"github.com/ts22082/dat_board_be/handlers"
 	"github.com/ts22082/dat_board_be/middleware"
+	"log"
 )
 
 // main is the entry point for the server application.
@@ -29,7 +27,8 @@ func main() {
 	// Configure CORS middleware
 	// After deploying will restrict to deployed address
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     os.Getenv("ORIGIN"),
+		//AllowOrigins:     os.Getenv("ORIGIN"),
+		AllowOrigins:     "*",
 		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowCredentials: true,
