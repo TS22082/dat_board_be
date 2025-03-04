@@ -9,41 +9,31 @@ import (
 	"github.com/ts22082/dat_board_be/handlers"
 	"github.com/ts22082/dat_board_be/middleware"
 	"log"
+	"os"
 )
 
 // main is the entry point for the server application.
 // It loads environment variables, sets up the Fiber app with necessary middleware, and defines API routes.
 func main() {
-
 	// Load environment variables from .env file
 	err := godotenv.Load()
 	if err != nil {
 		log.Printf("Failed to load .env: %v: ", err)
 	}
-
 	// Create a new Fiber app
 	app := fiber.New()
 
 	// Configure CORS middleware
 	// After deploying will restrict to deployed address
 	app.Use(cors.New(cors.Config{
-		//AllowOrigins:     os.Getenv("ORIGIN"),
-		AllowOrigins: "*",
-		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH",
-		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
-		//AllowCredentials: true,
+		AllowOrigins:     os.Getenv("ORIGIN"),
+		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH",
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowCredentials: true,
 	}))
 
 	// Use MongoConnect middleware for database connection
 	app.Use(middleware.MongoConnect())
-
-	app.Get("/test", func(c *fiber.Ctx) error {
-		response := map[string]interface{}{
-			"msg": "Success",
-		}
-
-		return c.JSON(response)
-	})
 
 	// Set up API routes
 	api := app.Group("/api")
@@ -87,4 +77,5 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	os.Exit(0)
 }
